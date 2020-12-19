@@ -3,10 +3,10 @@
         <el-collapse v-model="activeNames">
             <el-collapse-item title="电源" name="1">
                 <img data-item="{clazz:'start',size:'30*30',label:''}"
-                     :src="require('../assets/flow/diesel-enerator.svg')" style="width:42px;height:42px"/>
+                     :src="require('../assets/flow/diesel-enerator.png')" style="width:42px;height:42px"/>
                 <div>柴油发电机</div>
                 <img data-item="{clazz:'end',size:'30*30',label:''}"
-                     :src="require('../assets/flow/direct-drive-fan.svg')" style="width:42px;height:42px"/>
+                     :src="require('../assets/flow/direct-drive-fan.png')" style="width:42px;height:42px"/>
                 <div>直驱风机</div>
             </el-collapse-item>
         </el-collapse>
