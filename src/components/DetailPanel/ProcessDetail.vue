@@ -2,7 +2,6 @@
     <div :data-clazz="model.clazz">
         <div class="panelTitle">{{i18n['process']}}</div>
         <div class="panelBody">
-            <DefaultDetail :model="model" :onChange="onChange" :readOnly="readOnly" />
             <div class="panelRow">
                 <div>{{i18n['process.category']}}：</div>
                 <el-select style="width:90%; font-size:12px"
@@ -29,37 +28,12 @@
                           :value="model.name"
                           @input="(value) => {onChange('name', value)}" />
             </div>
-            <!--<div class="panelRow">
-                <div>
-                    {{i18n['process.dataObjs']}}：
-                    <el-button :disabled="readOnly" size="mini" @click="()=>{}">{{i18n['tooltip.edit']}}</el-button>
-                </div>
-
-            </div>
-            <div class="panelRow">
-                <div>
-                    {{i18n['process.signalDefs']}}：
-                    <el-button :disabled="readOnly" size="mini" @click="()=>{}">{{i18n['tooltip.edit']}}</el-button>
-                </div>
-
-            </div>
-            <div class="panelRow">
-                <div>
-                    {{i18n['process.messageDefs']}}：
-                    <el-button :disabled="readOnly" size="mini" @click="()=>{}">{{i18n['tooltip.edit']}}</el-button>
-                </div>
-
-            </div>-->
         </div>
     </div>
 </template>
 <script>
-  import DefaultDetail from "./DefaultDetail";
   export default {
     inject: ['i18n'],
-    components: {
-      DefaultDetail
-    },
     props: {
       model: {
         type:Object,

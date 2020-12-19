@@ -1,13 +1,14 @@
 <template>
     <div :data-clazz="model.clazz">
-        <div class="panelTitle">柴油发电机</div>
+        <div class="panelTitle">直驱风机</div>
         <div class="panelBody">
-            <DefaultDetail :model="model" :onChange="onChange" :readOnly="readOnly" />
+            <DefaultDetail :model="model" :onChange="onChange" :readOnly="readOnly"/>
         </div>
     </div>
 </template>
 <script>
   import DefaultDetail from "./DefaultDetail";
+
   export default {
     inject: ['i18n'],
     components: {
@@ -15,14 +16,15 @@
     },
     props: {
       model: {
-        type:Object,
-        default: ()=>({}),
+        type: Object,
+        default: () => ({}),
       },
       onChange: {
         type: Function,
-        default: ()=>{}
+        default: () => {
+        }
       },
-      readOnly:{
+      readOnly: {
         type: Boolean,
         default: false,
       }

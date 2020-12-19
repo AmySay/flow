@@ -58,8 +58,8 @@ const startDefaultOptions = {
   },
   style:{
     ...editorStyle.nodeStyle,
-    fill: '#FEF7E8',
-    stroke:'#FA8C16',
+    fill: '#fff',
+    stroke:'#000',
     cursor: 'default',
   },
   stateStyles: {
@@ -82,8 +82,8 @@ const endDefaultOptions = {
   },
   style:{
     ...editorStyle.nodeStyle,
-    fill: '#EFF7E8',
-    stroke:'#F5222D',
+    fill: '#fff',
+    stroke:'#000',
     cursor: 'default',
   },
   stateStyles: {
@@ -221,16 +221,17 @@ export default function(G6) {
     },
   }, 'gateway-node');
   G6.registerNode('start-node', {
-    shapeType: 'circle',
+    shapeType: 'rect',
     labelPosition: 'bottom',
     getShapeStyle(cfg) {
       cfg.size = [30, 30];
       const width = cfg.size[0];
+      const height = cfg.size[1];
       const style = {
         x: 0,
         y: 0,
-        r: width / 2,
-
+        width,
+        height,
         ...this.options.style,
       };
       if(cfg.hasOwnProperty('color')){
@@ -239,22 +240,24 @@ export default function(G6) {
       return style;
     },
     options:  G6.Util.deepMix({},endDefaultOptions,{
-      icon: require('../assets/flow/direct-drive-fan.png')
+      icon: require('../assets/flow/diesel-enerator.svg')
     }),
     afterDraw(cfg, group) {
       this.runAnimate(cfg,group)
     },
   }, 'base-node');
   G6.registerNode('end-node', {
-    shapeType: 'circle',
+    shapeType: 'rect',
     labelPosition: 'bottom',
     getShapeStyle(cfg) {
       cfg.size = [30, 30];
       const width = cfg.size[0];
+      const height = cfg.size[1];
       const style = {
         x: 0,
         y: 0,
-        r: width / 2,
+        width,
+        height,
         ...this.options.style,
       };
       if(cfg.hasOwnProperty('color')){
@@ -263,7 +266,7 @@ export default function(G6) {
       return style;
     },
     options:  G6.Util.deepMix({},endDefaultOptions,{
-      icon: require('../assets/flow/diesel-enerator.png')
+      icon: require('../assets/flow/direct-drive-fan.svg')
     }),
     afterDraw(cfg, group) {
       this.runAnimate(cfg,group)
@@ -372,7 +375,7 @@ export default function(G6) {
   }, 'task-node');
   G6.registerNode('timer-start-node', {
     options:  G6.Util.deepMix({},startDefaultOptions,{
-      icon: require('../assets/flow/diesel-enerator.png')
+      icon: require('../assets/flow/diesel-enerator.svg')
     }),
     afterDraw(cfg, group) {
       this.runAnimate(cfg,group)

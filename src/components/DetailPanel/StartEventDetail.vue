@@ -1,6 +1,6 @@
 <template>
     <div :data-clazz="model.clazz">
-        <div class="panelTitle">直驱风机</div>
+        <div class="panelTitle">柴油发电机</div>
         <div class="panelBody">
             <DefaultDetail :model="model" :onChange="onChange" :readOnly="readOnly" />
         </div>
