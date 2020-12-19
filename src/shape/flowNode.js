@@ -64,7 +64,7 @@ const startDefaultOptions = {
   },
   stateStyles: {
     selected: {
-      fill: '#FCD49A',
+      fill: '#fff',
     },
     hover: {
       cursor: editorStyle.cursor.hoverNode,
@@ -88,7 +88,7 @@ const endDefaultOptions = {
   },
   stateStyles: {
     selected: {
-      fill: '#CFD49A',
+      fill: '#fff',
     },
     hover: {
       cursor: editorStyle.cursor.hoverNode,
