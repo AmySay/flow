@@ -1,50 +1,16 @@
 <template>
     <div class="detailPanel" :style="{'height':height+'px'}">
-        <UserTaskDetail v-if="model.clazz === 'userTask'" :model="model" :onChange="onChange" :readOnly="readOnly" :users="users" :groups="groups" />
-        <ScriptTaskDetail v-else-if="model.clazz === 'scriptTask'" :model="model" :onChange="onChange" :readOnly="readOnly" />
-        <JavaTaskDetail v-else-if="model.clazz === 'javaTask'" :model="model" :onChange="onChange" :readOnly="readOnly" />
-        <ReceiveTaskDetail v-else-if="model.clazz === 'receiveTask'" :model="model" :onChange="onChange" :readOnly="readOnly" />
-        <MailTaskDetail v-else-if="model.clazz === 'mailTask'" :model="model" :onChange="onChange" :readOnly="readOnly" />
-        <TimerEventDetail v-else-if="model.clazz === 'timerStart' || model.clazz === 'timerCatch'" :model="model" :onChange="onChange" :readOnly="readOnly" />
-        <SignalEventDetail v-else-if="model.clazz === 'signalStart' || model.clazz === 'signalCatch'" :model="model" :onChange="onChange" :readOnly="readOnly" :signalDefs="signalDefs" />
-        <MessageEventDetail v-else-if="model.clazz === 'messageStart' || model.clazz === 'messageCatch'" :model="model" :onChange="onChange" :readOnly="readOnly" :messageDefs="messageDefs" />
-        <GatewayDetail v-else-if="model.clazz === 'gateway' || model.clazz === 'exclusiveGateway' || model.clazz === 'parallelGateway' || model.clazz === 'inclusiveGateway'" :model="model" :onChange="onChange" :readOnly="readOnly" />
-        <FlowDetail v-else-if="model.clazz === 'flow'" :model="model" :onChange="onChange" :readOnly="readOnly" />
-        <StartEventDetail v-else-if="model.clazz === 'start'" :model="model" :onChange="onChange" :readOnly="readOnly" />
-        <EndEventDetail v-else-if="model.clazz === 'end'" :model="model" :onChange="onChange" :readOnly="readOnly" />
-        <ProcessDetail v-else-if="model.clazz === 'process'" :model="model" :onChange="onChange" :readOnly="readOnly" :categorys="categorys" />
+        <svgDetail :model="model" :onChange="onChange" :readOnly="readOnly"/>
     </div>
 </template>
 <script>
-  import UserTaskDetail from "./UserTaskDetail"
-  import JavaTaskDetail from "./JavaTaskDetail"
-  import ScriptTaskDetail from "./ScriptTaskDetail"
-  import ReceiveTaskDetail from "./ReceiveTaskDetail"
-  import MailTaskDetail from "./MailTaskDetail"
-  import TimerEventDetail from "./TimerEventDetail"
-  import SignalEventDetail from "./SignalEventDetail"
-  import MessageEventDetail from "./MessageEventDetail"
-  import GatewayDetail from "./GatewayDetail"
-  import FlowDetail from "./FlowDetail"
-  import StartEventDetail from "./StartEventDetail"
-  import EndEventDetail from "./EndEventDetail"
-  import ProcessDetail from "./ProcessDetail"
+  import svgDetail from "./svgDetail"
+
   export default {
     inject: ['i18n'],
-    components:{
-      UserTaskDetail,
-      ScriptTaskDetail,
-      JavaTaskDetail,
-      ReceiveTaskDetail,
-      MailTaskDetail,
-      TimerEventDetail,
-      SignalEventDetail,
-      MessageEventDetail,
-      GatewayDetail,
-      FlowDetail,
-      StartEventDetail,
-      EndEventDetail,
-      ProcessDetail,
+    components: {
+
+      svgDetail,
     },
     props: {
       height: {
@@ -52,34 +18,35 @@
         default: 800,
       },
       model: {
-        type:Object,
-        default: ()=>({}),
+        type: Object,
+        default: () => ({}),
       },
       users: {
         type: Array,
-        default: ()=>([]),
+        default: () => ([]),
       },
       groups: {
         type: Array,
-        default: ()=>([]),
+        default: () => ([]),
       },
       categorys: {
         type: Array,
-        default: ()=>([]),
+        default: () => ([]),
       },
       signalDefs: {
         type: Array,
-        default: ()=>([]),
+        default: () => ([]),
       },
       messageDefs: {
         type: Array,
-        default: ()=>([]),
+        default: () => ([]),
       },
       onChange: {
         type: Function,
-        default: ()=>{}
+        default: () => {
+        }
       },
-      readOnly:{
+      readOnly: {
         type: Boolean,
         default: false,
       }

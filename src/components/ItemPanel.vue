@@ -1,20 +1,22 @@
 <template>
     <div class="itemPanel" :style="{'height': height+'px'}">
         <el-collapse v-model="activeNames">
-            <el-collapse-item title="电源" name="1">
-                <img data-item="{clazz:'start',size:'30*30',label:''}"
-                     :src="require('../assets/flow/diesel-enerator.png')" style="width:42px;height:42px"/>
-                <div>柴油发电机</div>
-                <img data-item="{clazz:'end',size:'30*30',label:''}"
-                     :src="require('../assets/flow/direct-drive-fan.png')" style="width:42px;height:42px"/>
-                <div>直驱风机</div>
+            <el-collapse-item :title="device[0].type" :data-id='JSON.stringify(device)' name="1"
+                              v-for="device in devices">
+                <div v-for="model of device" :data-id='JSON.stringify(model)'>
+                    <img data-item="{clazz:'start',size:'30*30',label:''}"
+                         :src="require('../assets/flow/diesel-enerator.png')" style="width:42px;height:42px"/>
+                    <div>{{model.name}}</div>
+                </div>
             </el-collapse-item>
         </el-collapse>
     </div>
 </template>
 <script>
+  import {getDevice} from '@/api/svg'
+  import _ from 'lodash'
+
   export default {
-    inject: ['i18n'],
     props: {
       height: {
         type: Number,
@@ -24,8 +26,13 @@
     data() {
       return {
         activeNames: [],
+        devices: {}
       };
     },
+    async mounted() {
+      const {data} = await getDevice()
+      this.devices = _.groupBy(data, 'typeId')
+    }
   }
 </script>
 

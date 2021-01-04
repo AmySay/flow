@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '../util/request'
 
 export function getDevice() {
   return request({

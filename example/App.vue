@@ -22,7 +22,7 @@
 
 <script>
   import WfdVue from '../src/components/Wfd'
-
+  import { getSvgById } from '../src/api/svg'
   export default {
     name: 'app',
     components: {
@@ -59,6 +59,7 @@
       }
     },
     mounted() {
+      getSvgById(41)
     }
   }
 </script>
