@@ -28,7 +28,6 @@
   import ToolbarPanel from '../components/ToolbarPanel'
   import ItemPanel from '../components/ItemPanel'
   import DetailPanel from '../components/DetailPanel'
-  import i18n from '../locales'
   import {exportXML,exportImg} from "../util/bpmn"
   import registerShape from '../shape'
   import registerBehavior from '../behavior'
@@ -40,11 +39,6 @@
       ToolbarPanel,
       ItemPanel,
       DetailPanel
-    },
-    provide() {
-      return {
-        i18n: i18n[this.lang]
-      }
     },
     props: {
       isView: {
@@ -58,10 +52,6 @@
       height: {
         type: Number,
         default: 800,
-      },
-      lang: {
-        type: String,
-        default: "zh"
       },
       data: {
         type: Object,

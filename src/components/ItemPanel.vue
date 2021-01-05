@@ -1,11 +1,10 @@
 <template>
     <div class="itemPanel" :style="{'height': height+'px'}">
-        <el-collapse v-model="activeNames">
-            <el-collapse-item :title="device[0].type" :data-id='JSON.stringify(device)' name="1"
+        <el-collapse v-model="activeNames" accordion>
+            <el-collapse-item :title="device[0].type" :data-id='JSON.stringify(device)'
                               v-for="device in devices">
                 <div v-for="model of device" :data-id='JSON.stringify(model)'>
-                    <img data-item="{clazz:'start',size:'30*30',label:''}"
-                         :src="require('../assets/flow/diesel-enerator.png')" style="width:42px;height:42px"/>
+                    <img data-item="{clazz:'start',size:'30*30',label:''}" :src="model.imgUrl" style="width:42px;height:42px"/>
                     <div>{{model.name}}</div>
                 </div>
             </el-collapse-item>

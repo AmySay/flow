@@ -15,7 +15,7 @@
         <wfd-vue ref="wfd" :data="demoData" :height="height" :users="candidateUsers" :groups="candidateGroups"
                  :categorys="categorys" :lang="lang"/>
         <el-dialog title="查看流程图" :visible.sync="modalVisible" width="60%">
-            <wfd-vue ref="wfd" :data="demoData1" :height="300" isView/>
+            <wfd-vue ref="wfd" :data="demoData" :height="300" isView/>
         </el-dialog>
     </div>
 </template>
@@ -37,13 +37,6 @@
             {id: 'startNode1', x: 50, y: 200, label: '', clazz: 'start',},
             {id: 'endNode', x: 600, y: 320, label: '', clazz: 'end',}
           ],
-          edges: [
-            {source: 'startNode1', target: 'endNode', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow'},
-          ]
-        },
-        demoData1: {
-          nodes: [{id: 'startNode1', x: 50, y: 200, label: '', clazz: 'start',},
-            {id: 'endNode', x: 600, y: 320, label: '', clazz: 'end',}],
           edges: [
             {source: 'startNode1', target: 'endNode', sourceAnchor: 1, targetAnchor: 3, clazz: 'flow'},
           ]
