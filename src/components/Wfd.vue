@@ -1,10 +1,12 @@
 <template>
   <div class="root">
-    <ToolbarPanel ref="toolbar" v-if="!isView" />
+    <ToolbarPanel ref="toolbar" v-if="!isView"/>
     <div style="display: flex;height: calc(100% - 47px);">
-      <ItemPanel ref="addItemPanel" v-if="!isView" :height="height"/>
-      <div ref="canvas" class="canvasPanel" :style="{'height':height+'px','width':isView?'100%':'70%','border-bottom':isView?0:null}"></div>
+      <ItemPanel :devices='devices' ref="addItemPanel" v-if="!isView" :height="height" @hook:mounted='initMounted'/>
+      <div ref="canvas" class="canvasPanel"
+           :style="{'height':height+'px','width':isView?'100%':'70%','border-bottom':isView?0:null}"></div>
       <DetailPanel ref="detailPanel"
+                   :devices='devices'
                    v-if="!isView"
                    :height="height"
                    :model="selectedModel"
@@ -14,7 +16,7 @@
                    :categorys="categorys"
                    :signalDefs="processModel.signalDefs"
                    :messageDefs="processModel.messageDefs"
-                   :onChange="(key,val)=>{onItemCfgChange(key,val)}" />
+                   :onChange="(key,val)=>{onItemCfgChange(key,val)}"/>
     </div>
   </div>
 </template>
@@ -28,11 +30,15 @@
   import ToolbarPanel from '../components/ToolbarPanel'
   import ItemPanel from '../components/ItemPanel'
   import DetailPanel from '../components/DetailPanel'
-  import {exportXML,exportImg} from "../util/bpmn"
+  import {
+    exportXML,
+    exportImg
+  } from "../util/bpmn"
   import registerShape from '../shape'
   import registerBehavior from '../behavior'
-  registerShape(G6);
-  registerBehavior(G6);
+  import i18n from '../locales'
+  import { getDevice } from '@/api/svg'
+  import _ from 'lodash'
   export default {
     name: "wfd-vue",
     components: {
@@ -55,7 +61,10 @@
       },
       data: {
         type: Object,
-        default: () => ({nodes:[],edges:[]})
+        default: () => ({
+          nodes: [],
+          edges: []
+        })
       },
       users: {
         type: Array,
@@ -70,9 +79,16 @@
         default: () => ([])
       }
     },
+    provide() {
+      return {
+        i18n: i18n[ this.lang ]
+      }
+    },
     data() {
       return {
-        resizeFunc: ()=>{},
+        devices: {},
+        resizeFunc: () => {
+        },
         selectedModel: {},
         processModel: {
           id: '',
@@ -83,13 +99,13 @@
           signalDefs: [],
           messageDefs: [],
         },
-        graph:null,
+        graph: null,
         cmdPlugin: null,
       };
     },
-    watch:{
-      data(oldData,newData){
-        if(oldData !== newData) {
+    watch: {
+      data(oldData,newData) {
+        if (oldData !== newData) {
           if (this.graph) {
             this.graph.changeData(this.initShape(newData));
             this.graph.setMode(this.mode);
@@ -105,8 +121,15 @@
       },
     },
     methods: {
-      initShape(data){
-        if(data && data.nodes){
+      async getDevices() {
+        const { data } = await getDevice()
+        this.devices = _.groupBy(data,'typeId')
+        registerShape(G6,data);
+        registerBehavior(G6);
+      },
+      initShape(data) {
+        debugger
+        if (data && data.nodes) {
           return {
             nodes: data.nodes.map(node => {
               return {
@@ -119,51 +142,54 @@
         }
         return data;
       },
-      initEvents(){
-        this.graph.on('afteritemselected',(items)=>{
-          if(items && items.length > 0) {
-            let item = this.graph.findById(items[0]);
-            if(!item){
-              item = this.getNodeInSubProcess(items[0])
+      initEvents() {
+        this.graph.on('afteritemselected',(items) => {
+          if (items && items.length > 0) {
+            let item = this.graph.findById(items[ 0 ]);
+            if (!item) {
+              item = this.getNodeInSubProcess(items[ 0 ])
             }
-            this.selectedModel = {...item.getModel()};
+            this.selectedModel = { ...item.getModel() };
           } else {
             this.selectedModel = this.processModel;
           }
         });
-        const page = this.$refs['canvas'];
+        const page = this.$refs[ 'canvas' ];
         const graph = this.graph;
-        const height = this.height-1;
-        this.resizeFunc = ()=>{
+        const height = this.height - 1;
+        this.resizeFunc = () => {
           graph.changeSize(page.offsetWidth,height);
         };
-        window.addEventListener("resize", this.resizeFunc);
+        window.addEventListener("resize",this.resizeFunc);
       },
-      onItemCfgChange(key,value){
+      onItemCfgChange(key,value) {
         debugger
         const items = this.graph.get('selectedItems');
-        if(items && items.length > 0){
-          let item = this.graph.findById(items[0]);
-          if(!item){
-            item = this.getNodeInSubProcess(items[0])
+        if (items && items.length > 0) {
+          let item = this.graph.findById(items[ 0 ]);
+          if (!item) {
+            item = this.getNodeInSubProcess(items[ 0 ])
           }
-          if(this.graph.executeCommand) {
-            this.graph.executeCommand('update', {
-              itemId: items[0],
-              updateModel: {[key]: value}
+          if (this.graph.executeCommand) {
+            this.graph.executeCommand('update',{
+              itemId: items[ 0 ],
+              updateModel: { [ key ]: value }
             });
-          }else {
-            this.graph.updateItem(item, {[key]: value});
+          } else {
+            this.graph.updateItem(item,{ [ key ]: value });
           }
-          this.selectedModel = {...item.getModel()};
+          this.selectedModel = { ...item.getModel() };
         } else {
-          const canvasModel = { ...this.processModel, [key]: value};
+          const canvasModel = {
+            ...this.processModel,
+            [ key ]: value
+          };
           this.selectedModel = canvasModel;
           this.processModel = canvasModel;
         }
       },
-      getNodeInSubProcess(itemId){
-        const subProcess = this.graph.find('node', (node) => {
+      getNodeInSubProcess(itemId) {
+        const subProcess = this.graph.find('node',(node) => {
           if (node.get('model')) {
             const clazz = node.get('model').clazz;
             if (clazz === 'subProcess') {
@@ -178,71 +204,73 @@
             return false;
           }
         });
-        if(subProcess) {
+        if (subProcess) {
           const group = subProcess.getContainer();
-          return group.getItem(subProcess, itemId);
+          return group.getItem(subProcess,itemId);
         }
         return null;
       },
+      initMounted() {
+        this.getDevices()
+        let plugins = [];
+        if (!this.isView) {
+          this.cmdPlugin = new Command();
+          const toolbar = new Toolbar({ container: this.$refs[ 'toolbar' ].$el });
+          const addItemPanel = new AddItemPanel({ container: this.$refs[ 'addItemPanel' ].$el });
+          const canvasPanel = new CanvasPanel({ container: this.$refs[ 'canvas' ] });
+          plugins = [this.cmdPlugin,toolbar,addItemPanel,canvasPanel];
+        }
+        const width = this.$refs[ 'canvas' ].offsetWidth;
+        this.graph = new G6.Graph({
+          plugins: plugins,
+          container: this.$refs[ 'canvas' ],
+          height: this.height,
+          width: width,
+          modes: {
+            default: ['drag-canvas','clickSelected'],
+            view: [],
+            edit: ['drag-canvas','hoverNodeActived','hoverAnchorActived','dragNode','dragEdge',
+              'dragPanelItemAddNode','clickSelected','deleteItem','itemAlign','dragPoint','brush-select'],
+          },
+          defaultEdge: {
+            shape: 'flow-polyline-round',
+          },
+        });
+        this.graph.saveXML = (createFile = true) => exportXML(this.graph.save(),this.processModel,createFile);
+        this.graph.saveImg = (createFile = true) => exportImg(this.$refs[ 'canvas' ],this.processModel.name,createFile);
+        if (this.isView)
+          this.graph.setMode('view');
+        else
+          this.graph.setMode(this.mode);
+        // this.graph.data();
+        // this.graph.render();
+        if (this.isView && this.data && this.data.nodes) {
+          this.graph.fitView(5)
+        }
+        this.initEvents();
+      }
     },
-    destroyed(){
-      window.removeEventListener("resize", this.resizeFunc);
+    destroyed() {
+      window.removeEventListener("resize",this.resizeFunc);
       this.graph.getNodes().forEach(node => {
         node.getKeyShape().stopAnimate();
       });
     },
-    mounted() {
-      let plugins = [];
-      if(!this.isView){
-        this.cmdPlugin = new Command();
-        const toolbar = new Toolbar({container:this.$refs['toolbar'].$el});
-        const addItemPanel = new AddItemPanel({container:this.$refs['addItemPanel'].$el});
-        const canvasPanel = new CanvasPanel({container:this.$refs['canvas']});
-        plugins = [ this.cmdPlugin,toolbar,addItemPanel,canvasPanel ];
-      }
-      const width = this.$refs['canvas'].offsetWidth;
-      this.graph = new G6.Graph({
-        plugins: plugins,
-        container: this.$refs['canvas'],
-        height: this.height,
-        width: width,
-        modes: {
-          default: ['drag-canvas', 'clickSelected'],
-          view: [ ],
-          edit: [ 'drag-canvas', 'hoverNodeActived','hoverAnchorActived','dragNode','dragEdge',
-            'dragPanelItemAddNode','clickSelected','deleteItem','itemAlign','dragPoint','brush-select'],
-        },
-        defaultEdge: {
-          shape: 'flow-polyline-round',
-        },
-      });
-      this.graph.saveXML = (createFile = true) => exportXML(this.graph.save(),this.processModel,createFile);
-      this.graph.saveImg = (createFile = true) => exportImg(this.$refs['canvas'],this.processModel.name,createFile);
-      if(this.isView)
-        this.graph.setMode('view');
-      else
-        this.graph.setMode(this.mode);
-      this.graph.data(this.initShape(this.data));
-      this.graph.render();
-      if(this.isView && this.data && this.data.nodes){
-        this.graph.fitView(5)
-      }
-      this.initEvents();
-    }
   };
 </script>
 <style lang="scss" scoped>
-    .root{
-        width: 100%;
-        height: 100%;
-        background-color: #fff;
-        display: block;
-    }
-    .canvasPanel {
-        flex: 0 0 auto;
-        float: left;
-        width:70%;
-        background-color: #fff;
-
-    }
+  .root {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    display: block;
+  }
+  
+  .canvasPanel {
+    flex: 0 0 auto;
+    float: left;
+    width: 70%;
+    background-color: #fff;
+    
+  }
 </style>

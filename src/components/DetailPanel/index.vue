@@ -119,6 +119,10 @@
       }
     },
     props: {
+      devices:{
+        type: Object,
+        default: () => ({}),
+      },
       height: {
         type: Number,
         default: 800,
