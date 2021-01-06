@@ -35,24 +35,24 @@
         demoData: {
           nodes: [
             {
-              id: 'startNode1',
+              id: '柴油发电机',
               x: 50,
               y: 200,
               label: '',
-              clazz: 'start',
+              clazz: '柴油发电机',
             },
             {
-              id: 'endNode',
+              id: '直发电机',
               x: 600,
               y: 320,
               label: '',
-              clazz: 'end',
+              clazz: '直发电机',
             }
           ],
           edges: [
             {
-              source: 'startNode1',
-              target: 'endNode',
+              source: '柴油发电机',
+              target: '直发电机',
               sourceAnchor: 1,
               targetAnchor: 3,
               clazz: 'flow'

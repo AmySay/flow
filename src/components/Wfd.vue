@@ -39,7 +39,6 @@
   import i18n from '../locales'
   import { getDevice } from '@/api/svg'
   import _ from 'lodash'
-  
   export default {
     name: "wfd-vue",
     components: {
@@ -247,8 +246,8 @@
           this.graph.setMode('view');
         else
           this.graph.setMode(this.mode);
-        // this.graph.data();
-        // this.graph.render();
+        this.graph.data(this.initShape(this.data));
+        this.graph.render();
         if (this.isView && this.data && this.data.nodes) {
           this.graph.fitView(5)
         }
