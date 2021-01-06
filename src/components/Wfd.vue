@@ -1,7 +1,7 @@
 <template>
   <div class="root">
     <ToolbarPanel ref="toolbar" v-if="!isView"/>
-    <div style="display: flex;height: calc(100% - 47px);">
+    <div style="display: flex;height: calc(100% - 49px);">
       <ItemPanel :devices='devices' ref="addItemPanel" v-if="!isView" :height="height" @hook:mounted='initMounted'/>
       <div ref="canvas" class="canvasPanel"
            :style="{'height':height+'px','width':isView?'100%':'70%','border-bottom':isView?0:null}"></div>
@@ -39,6 +39,7 @@
   import i18n from '../locales'
   import { getDevice } from '@/api/svg'
   import _ from 'lodash'
+  
   export default {
     name: "wfd-vue",
     components: {
@@ -106,11 +107,13 @@
     watch: {
       data(oldData,newData) {
         if (oldData !== newData) {
+          console.log('watch')
           if (this.graph) {
             this.graph.changeData(this.initShape(newData));
             this.graph.setMode(this.mode);
             this.graph.emit('canvas:click');
             if (this.cmdPlugin) {
+              console.log('this.cmdPlugin')
               this.cmdPlugin.initPlugin(this.graph);
             }
             if (this.isView) {
@@ -122,13 +125,14 @@
     },
     methods: {
       async getDevices() {
-        const { data } = await getDevice()
-        this.devices = _.groupBy(data,'typeId')
-        registerShape(G6,data);
-        registerBehavior(G6);
+        getDevice().then(res => {
+          this.devices = _.groupBy(res.data,'typeId')
+          registerShape(G6,res.data);
+          registerBehavior(G6);
+        })
       },
       initShape(data) {
-        debugger
+        console.log('initShape')
         if (data && data.nodes) {
           return {
             nodes: data.nodes.map(node => {
@@ -143,6 +147,7 @@
         return data;
       },
       initEvents() {
+        console.log('initEvents')
         this.graph.on('afteritemselected',(items) => {
           if (items && items.length > 0) {
             let item = this.graph.findById(items[ 0 ]);
@@ -210,8 +215,8 @@
         }
         return null;
       },
-      initMounted() {
-        this.getDevices()
+      async initMounted() {
+        await this.getDevices()
         let plugins = [];
         if (!this.isView) {
           this.cmdPlugin = new Command();

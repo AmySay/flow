@@ -22,6 +22,7 @@ class DetailPanel {
     this.set('graph', graph);
     const events = self.getEvents();
     const bindEvents = {};
+    debugger
     each(events, (v, k) => {
       const event = wrapBehavior(self, v);
       bindEvents[k] = event;

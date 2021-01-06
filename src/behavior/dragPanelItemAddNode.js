@@ -1,5 +1,6 @@
 import editorStyle from "../util/defaultStyle";
 import { getShapeName } from '../util/clazz';
+import de from "element-ui/src/locale/lang/de";
 
 export default function(G6){
   G6.registerBehavior('dragPanelItemAddNode', {
@@ -16,6 +17,7 @@ export default function(G6){
       }
     },
     onMouseMove(e){
+      debugger
       if(this.graph.get('addNodeDragging')){
         let delegateShape = this.graph.get('addDelegateShape');
         const addModel = this.graph.get('addModel');
@@ -44,6 +46,7 @@ export default function(G6){
       }
     },
     onMouseUp(e){
+      debugger
       if (this.graph.get('addNodeDragging')) {
         const p = this.graph.getPointByClient(e.clientX, e.clientY);
         const subProcessNode = this.graph.find('node', (node) => {
@@ -70,6 +73,7 @@ export default function(G6){
       }
     },
     _addNodeBySubProcess(p, node) {
+      debugger
       if (this.graph.get('addNodeDragging')) {
         const addModel = this.graph.get('addModel');
         const { clazz = 'userTask' } = addModel;
@@ -99,6 +103,7 @@ export default function(G6){
       }
     },
     onMouseLeave(e){
+      debugger
       if (this.graph.get('addNodeDragging')) {
         this._clearDelegate();
         this.graph.emit('afternodedragend');
@@ -114,6 +119,7 @@ export default function(G6){
       this.graph.emit('afternodedragend');
     },
     _addNode(p){
+      debugger
       if (this.graph.get('addNodeDragging')) {
         const addModel = this.graph.get('addModel');
         const { clazz = 'userTask' } = addModel;
