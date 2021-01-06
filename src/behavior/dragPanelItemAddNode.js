@@ -1,13 +1,10 @@
 import editorStyle from "../util/defaultStyle";
-import { getShapeName } from '../util/clazz';
-import de from "element-ui/src/locale/lang/de";
+import {getShapeName} from '../util/clazz';
 
-export default function(G6){
+export default function (G6) {
   G6.registerBehavior('dragPanelItemAddNode', {
     getDefaultCfg() {
-      return {
-
-      };
+      return {};
     },
     getEvents() {
       return {
@@ -16,14 +13,14 @@ export default function(G6){
         'canvas:mouseleave': 'onMouseLeave',
       }
     },
-    onMouseMove(e){
-      debugger
-      if(this.graph.get('addNodeDragging')){
+    onMouseMove(e) {
+
+      if (this.graph.get('addNodeDragging')) {
         let delegateShape = this.graph.get('addDelegateShape');
         const addModel = this.graph.get('addModel');
         const width = parseInt(addModel.size.split('*')[0]);
         const height = parseInt(addModel.size.split('*')[1]);
-        const point = this.graph.getPointByClient(e.x,e.y);
+        const point = this.graph.getPointByClient(e.x, e.y);
         const x = point.x;
         const y = point.y;
         if (!delegateShape) {
@@ -40,13 +37,13 @@ export default function(G6){
           delegateShape.set('capture', false);
           this.graph.set('addDelegateShape', delegateShape);
         }
-        delegateShape.attr({ x: x - width / 2, y: y - height / 2 });
+        delegateShape.attr({x: x - width / 2, y: y - height / 2});
         this.graph.paint();
-        this.graph.emit('afternodedrag',delegateShape);
+        this.graph.emit('afternodedrag', delegateShape);
       }
     },
-    onMouseUp(e){
-      debugger
+    onMouseUp(e) {
+
       if (this.graph.get('addNodeDragging')) {
         const p = this.graph.getPointByClient(e.clientX, e.clientY);
         const subProcessNode = this.graph.find('node', (node) => {
@@ -73,10 +70,10 @@ export default function(G6){
       }
     },
     _addNodeBySubProcess(p, node) {
-      debugger
+
       if (this.graph.get('addNodeDragging')) {
         const addModel = this.graph.get('addModel');
-        const { clazz = 'userTask' } = addModel;
+        const {clazz = 'userTask'} = addModel;
         addModel.shape = getShapeName(clazz);
         addModel.size = addModel.size.split("*");
         const timestamp = new Date().getTime();
@@ -102,14 +99,14 @@ export default function(G6){
         }
       }
     },
-    onMouseLeave(e){
-      debugger
+    onMouseLeave(e) {
+
       if (this.graph.get('addNodeDragging')) {
         this._clearDelegate();
         this.graph.emit('afternodedragend');
       }
     },
-    _clearDelegate(){
+    _clearDelegate() {
       const delegateShape = this.graph.get('addDelegateShape');
       if (delegateShape) {
         delegateShape.remove();
@@ -118,11 +115,11 @@ export default function(G6){
       }
       this.graph.emit('afternodedragend');
     },
-    _addNode(p){
-      debugger
+    _addNode(p) {
+
       if (this.graph.get('addNodeDragging')) {
         const addModel = this.graph.get('addModel');
-        const { clazz = 'userTask' } = addModel;
+        const {clazz = 'userTask'} = addModel;
         //type、shape属性同时存在即兼容之前版本的数据，又兼容g6的升级
         addModel.type = getShapeName(clazz);
         addModel.shape = getShapeName(clazz);

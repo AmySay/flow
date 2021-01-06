@@ -1,28 +1,29 @@
 <template>
-  <div class="root">
-    <ToolbarPanel ref="toolbar" v-if="!isView"/>
-    <div style="display: flex;height: calc(100% - 49px);">
-      <ItemPanel :devices='devices' ref="addItemPanel" v-if="!isView" :height="height" @hook:mounted='initMounted'/>
-      <div ref="canvas" class="canvasPanel"
-           :style="{'height':height+'px','width':isView?'100%':'70%','border-bottom':isView?0:null}"></div>
-      <DetailPanel ref="detailPanel"
-                   :devices='devices'
-                   v-if="!isView"
-                   :height="height"
-                   :model="selectedModel"
-                   :readOnly="mode !== 'edit'"
-                   :users="users"
-                   :groups="groups"
-                   :categorys="categorys"
-                   :signalDefs="processModel.signalDefs"
-                   :messageDefs="processModel.messageDefs"
-                   :onChange="(key,val)=>{onItemCfgChange(key,val)}"/>
+    <div class="root">
+        <ToolbarPanel ref="toolbar" v-if="!isView"/>
+        <div style="display: flex;height: calc(100% - 49px);">
+            <ItemPanel :devices='devices' ref="addItemPanel" v-if="!isView" :height="height"
+                       @hook:mounted='initMounted'/>
+            <div ref="canvas" class="canvasPanel"
+                 :style="{'height':height+'px','width':isView?'100%':'70%','border-bottom':isView?0:null}"></div>
+            <DetailPanel ref="detailPanel"
+                         :devices='devices'
+                         v-if="!isView"
+                         :height="height"
+                         :model="selectedModel"
+                         :readOnly="mode !== 'edit'"
+                         :users="users"
+                         :groups="groups"
+                         :categorys="categorys"
+                         :signalDefs="processModel.signalDefs"
+                         :messageDefs="processModel.messageDefs"
+                         :onChange="(key,val)=>{onItemCfgChange(key,val)}"/>
+        </div>
     </div>
-  </div>
 </template>
 <script>
   import G6 from '@antv/g6/lib';
-  import { getShapeName } from '../util/clazz'
+  import {getShapeName} from '../util/clazz'
   import Command from '../plugins/command'
   import Toolbar from '../plugins/toolbar'
   import AddItemPanel from '../plugins/addItemPanel'
@@ -30,15 +31,17 @@
   import ToolbarPanel from '../components/ToolbarPanel'
   import ItemPanel from '../components/ItemPanel'
   import DetailPanel from '../components/DetailPanel'
-  import {
-    exportXML,
-    exportImg
-  } from "../util/bpmn"
+  import {exportImg, exportXML} from "../util/bpmn"
   import registerShape from '../shape'
   import registerBehavior from '../behavior'
   import i18n from '../locales'
-  import { getDevice } from '@/api/svg'
+  import {getDevice} from '@/api/svg'
   import _ from 'lodash'
+
+  registerShape(G6);
+  registerBehavior(G6);
+
+
   export default {
     name: "wfd-vue",
     components: {
@@ -81,7 +84,7 @@
     },
     provide() {
       return {
-        i18n: i18n[ this.lang ]
+        i18n: i18n[this.lang]
       }
     },
     data() {
@@ -104,7 +107,7 @@
       };
     },
     watch: {
-      data(oldData,newData) {
+      data(oldData, newData) {
         if (oldData !== newData) {
           console.log('watch')
           if (this.graph) {
@@ -125,8 +128,8 @@
     methods: {
       async getDevices() {
         getDevice().then(res => {
-          this.devices = _.groupBy(res.data,'typeId')
-          registerShape(G6,res.data);
+          this.devices = _.groupBy(res.data, 'typeId')
+          registerShape(G6, res.data);
           registerBehavior(G6);
         })
       },
@@ -147,53 +150,53 @@
       },
       initEvents() {
         console.log('initEvents')
-        this.graph.on('afteritemselected',(items) => {
+        this.graph.on('afteritemselected', (items) => {
           if (items && items.length > 0) {
-            let item = this.graph.findById(items[ 0 ]);
+            let item = this.graph.findById(items[0]);
             if (!item) {
-              item = this.getNodeInSubProcess(items[ 0 ])
+              item = this.getNodeInSubProcess(items[0])
             }
-            this.selectedModel = { ...item.getModel() };
+            this.selectedModel = {...item.getModel()};
           } else {
             this.selectedModel = this.processModel;
           }
         });
-        const page = this.$refs[ 'canvas' ];
+        const page = this.$refs['canvas'];
         const graph = this.graph;
         const height = this.height - 1;
         this.resizeFunc = () => {
-          graph.changeSize(page.offsetWidth,height);
+          graph.changeSize(page.offsetWidth, height);
         };
-        window.addEventListener("resize",this.resizeFunc);
+        window.addEventListener("resize", this.resizeFunc);
       },
-      onItemCfgChange(key,value) {
+      onItemCfgChange(key, value) {
         debugger
         const items = this.graph.get('selectedItems');
         if (items && items.length > 0) {
-          let item = this.graph.findById(items[ 0 ]);
+          let item = this.graph.findById(items[0]);
           if (!item) {
-            item = this.getNodeInSubProcess(items[ 0 ])
+            item = this.getNodeInSubProcess(items[0])
           }
           if (this.graph.executeCommand) {
-            this.graph.executeCommand('update',{
-              itemId: items[ 0 ],
-              updateModel: { [ key ]: value }
+            this.graph.executeCommand('update', {
+              itemId: items[0],
+              updateModel: {[key]: value}
             });
           } else {
-            this.graph.updateItem(item,{ [ key ]: value });
+            this.graph.updateItem(item, {[key]: value});
           }
-          this.selectedModel = { ...item.getModel() };
+          this.selectedModel = {...item.getModel()};
         } else {
           const canvasModel = {
             ...this.processModel,
-            [ key ]: value
+            [key]: value
           };
           this.selectedModel = canvasModel;
           this.processModel = canvasModel;
         }
       },
       getNodeInSubProcess(itemId) {
-        const subProcess = this.graph.find('node',(node) => {
+        const subProcess = this.graph.find('node', (node) => {
           if (node.get('model')) {
             const clazz = node.get('model').clazz;
             if (clazz === 'subProcess') {
@@ -210,52 +213,54 @@
         });
         if (subProcess) {
           const group = subProcess.getContainer();
-          return group.getItem(subProcess,itemId);
+          return group.getItem(subProcess, itemId);
         }
         return null;
       },
       async initMounted() {
         await this.getDevices()
+
         let plugins = [];
         if (!this.isView) {
           this.cmdPlugin = new Command();
-          const toolbar = new Toolbar({ container: this.$refs[ 'toolbar' ].$el });
-          const addItemPanel = new AddItemPanel({ container: this.$refs[ 'addItemPanel' ].$el });
-          const canvasPanel = new CanvasPanel({ container: this.$refs[ 'canvas' ] });
-          plugins = [this.cmdPlugin,toolbar,addItemPanel,canvasPanel];
+          const toolbar = new Toolbar({container: this.$refs['toolbar'].$el});
+          const addItemPanel = new AddItemPanel({container: this.$refs['addItemPanel'].$el});
+          const canvasPanel = new CanvasPanel({container: this.$refs['canvas']});
+          plugins = [this.cmdPlugin, toolbar, addItemPanel, canvasPanel];
         }
-        const width = this.$refs[ 'canvas' ].offsetWidth;
+        const width = this.$refs['canvas'].offsetWidth;
         this.graph = new G6.Graph({
           plugins: plugins,
-          container: this.$refs[ 'canvas' ],
+          container: this.$refs['canvas'],
           height: this.height,
           width: width,
           modes: {
-            default: ['drag-canvas','clickSelected'],
+            default: ['drag-canvas', 'clickSelected'],
             view: [],
-            edit: ['drag-canvas','hoverNodeActived','hoverAnchorActived','dragNode','dragEdge',
-              'dragPanelItemAddNode','clickSelected','deleteItem','itemAlign','dragPoint','brush-select'],
+            edit: ['drag-canvas', 'hoverNodeActived', 'hoverAnchorActived', 'dragNode', 'dragEdge',
+              'dragPanelItemAddNode', 'clickSelected', 'deleteItem', 'itemAlign', 'dragPoint', 'brush-select'],
           },
           defaultEdge: {
             shape: 'flow-polyline-round',
           },
         });
-        this.graph.saveXML = (createFile = true) => exportXML(this.graph.save(),this.processModel,createFile);
-        this.graph.saveImg = (createFile = true) => exportImg(this.$refs[ 'canvas' ],this.processModel.name,createFile);
+        this.graph.saveXML = (createFile = true) => exportXML(this.graph.save(), this.processModel, createFile);
+        this.graph.saveImg = (createFile = true) => exportImg(this.$refs['canvas'], this.processModel.name, createFile);
         if (this.isView)
           this.graph.setMode('view');
         else
           this.graph.setMode(this.mode);
-        this.graph.data(this.initShape(this.data));
+        // this.graph.data(this.initShape(this.data));
         this.graph.render();
         if (this.isView && this.data && this.data.nodes) {
           this.graph.fitView(5)
         }
         this.initEvents();
+
       }
     },
     destroyed() {
-      window.removeEventListener("resize",this.resizeFunc);
+      window.removeEventListener("resize", this.resizeFunc);
       this.graph.getNodes().forEach(node => {
         node.getKeyShape().stopAnimate();
       });
@@ -263,18 +268,18 @@
   };
 </script>
 <style lang="scss" scoped>
-  .root {
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    display: block;
-  }
-  
-  .canvasPanel {
-    flex: 0 0 auto;
-    float: left;
-    width: 70%;
-    background-color: #fff;
-    
-  }
+    .root {
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        display: block;
+    }
+
+    .canvasPanel {
+        flex: 0 0 auto;
+        float: left;
+        width: 70%;
+        background-color: #fff;
+
+    }
 </style>

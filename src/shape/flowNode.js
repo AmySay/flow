@@ -49,68 +49,18 @@ const endDefaultOptions = {
 };
 
 
-export default function(G6,devices) {
-  /*G6.registerNode('柴油发电机',{
-   shapeType: 'rect',
-   labelPosition: 'bottom',
-   getShapeStyle(cfg) {
-   cfg.size = [30,30];
-   const width = cfg.size[ 0 ];
-   const height = cfg.size[ 1 ];
-   const style = {
-   x: 0,
-   y: 0,
-   width,
-   height,
-   ...this.options.style,
-   };
-   if (cfg.hasOwnProperty('color')) {
-   style.fill = cfg.color
-   }
-   return style;
-   },
-   options: G6.Util.deepMix({},endDefaultOptions,{
-   icon: require('../assets/flow/diesel-enerator.svg')
-   }),
-   afterDraw(cfg,group) {
-   this.runAnimate(cfg,group)
-   },
-   },'base-node');
-   G6.registerNode('直驱风机',{
-   shapeType: 'rect',
-   labelPosition: 'bottom',
-   getShapeStyle(cfg) {
-   cfg.size = [30,30];
-   const width = cfg.size[ 0 ];
-   const height = cfg.size[ 1 ];
-   const style = {
-   x: 0,
-   y: 0,
-   width,
-   height,
-   ...this.options.style,
-   };
-   if (cfg.hasOwnProperty('color')) {
-   style.fill = cfg.color
-   }
-   return style;
-   },
-   options: G6.Util.deepMix({},endDefaultOptions,{
-   icon: require('../assets/flow/diesel-enerator.svg')
-   }),
-   afterDraw(cfg,group) {
-   this.runAnimate(cfg,group)
-   },
-   },'base-node')*/
+export default function (G6, devices) {
   if (devices && devices.length) {
     devices.map(device => {
-      G6.registerNode(device.name,{
+      G6.registerNode(device.name, {
         shapeType: 'rect',
         labelPosition: 'bottom',
         getShapeStyle(cfg) {
-          cfg.size = [30,30];
-          const width = cfg.size[ 0 ];
-          const height = cfg.size[ 1 ];
+          debugger
+          console.log(cfg)
+          cfg.size = [30, 30];
+          const width = cfg.size[0];
+          const height = cfg.size[1];
           const style = {
             x: 0,
             y: 0,
@@ -123,13 +73,13 @@ export default function(G6,devices) {
           }
           return style;
         },
-        options: G6.Util.deepMix({},endDefaultOptions,{
+        options: G6.Util.deepMix({}, endDefaultOptions, {
           icon: device.imgUrl
         }),
-        afterDraw(cfg,group) {
-          this.runAnimate(cfg,group)
+        afterDraw(cfg, group) {
+          this.runAnimate(cfg, group)
         },
-      },'base-node');
+      }, 'base-node');
     })
   }
 }
