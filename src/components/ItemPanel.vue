@@ -4,7 +4,7 @@
       <el-collapse-item :title="device[0].type" :data-id='JSON.stringify(device)'
                         v-for="device in devices">
         <div v-for="model of device" :data-id='JSON.stringify(model)'>
-          <img :data-item="`{clazz:'${model.name}',size:'30*30',label:'',model:'${JSON.stringify(model)}'}`" :src="model.imgUrl" style="width:42px;height:42px"/>
+          <img :data-item="`{clazz:'${model.name}',size:'92*96',label:'',model:'${JSON.stringify(model)}'}`" :src="model.imgUrl"/>
           <div>{{model.name}}</div>
         </div>
       </el-collapse-item>

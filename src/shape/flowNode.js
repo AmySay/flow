@@ -27,8 +27,8 @@ const startDefaultOptions = {
 const endDefaultOptions = {
   icon: null,
   iconStyle: {
-    width: 18,
-    height: 18,
+    width: 92,
+    height: 96,
     left: 6,
     top: 6,
   },
@@ -58,7 +58,7 @@ export default function (G6, devices) {
         getShapeStyle(cfg) {
           debugger
           console.log(cfg)
-          cfg.size = [30, 30];
+          cfg.size = [98, 102];
           const width = cfg.size[0];
           const height = cfg.size[1];
           const style = {

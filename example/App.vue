@@ -8,7 +8,7 @@
       <el-button size="small" disabled
                  @click="()=>{this.$refs['wfd'].graph.saveImg()}">导出图片
       </el-button>
-      <el-button size="small"
+      <el-button size="small" disabled
                  @click="()=>{this.modalVisible=true}">查看流程图
       </el-button>
     </div>
