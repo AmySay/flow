@@ -40,16 +40,15 @@
         <div v-for='item in paramList'>
           <el-form-item :prop="item.name" class='el-form-details'>
             <span :label="item.name" :prop="item.name" class='el-form-item__label'>
-            
-            {{item.name}}
-              <el-tooltip v-show='item.description' class="item" effect="dark" :content="item.description"
+              {{item.name}}
+              <el-tooltip  slot="label" v-show = 'item.description' effect="dark" :content="item.description"
                           placement="top">
-                <i
-                  class="el-icon-question el-input__icon"
-                  slot="label"
-                >
-                </i>
+              <i
+                class="el-icon-question el-input__icon"
+              >
+              </i>
               </el-tooltip>
+
             </span>
             <el-input v-model="item.defaultValue" :placehold='item.description'>
               <template v-if='item.unit' slot="append">{{item.unit}}</template>
